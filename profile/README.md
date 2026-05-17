@@ -215,11 +215,16 @@ spawn pattern above.
 ## 6. Hand off to a mission orchestrator (multi-agent)
 
 ```
-  for work too big for one session, dispatch to a mission:
+  for work too big for one session, hand it to a missions orchestrator:
 
-    you ──► dispatch_to_agent  @<owner>/missions-orchestrator
-            "build /health + /add endpoints in github.com/me/app,
-             three features, TS + vitest, branch per feature"
+    in any CC session, ask in natural language:
+
+      "ask @<owner>/missions-orchestrator to build /health + /add
+       endpoints in github.com/me/app, three features, TS + vitest,
+       branch per feature"
+
+    the model picks the dispatch_to_agent tool on its own
+    (cross-tenant; @<owner>/<slug> handle resolves on the hub).
 
          orchestrator session
               │
@@ -241,8 +246,9 @@ spawn pattern above.
 ```
 
 This is the missions pattern: one orchestrator coordinates many short-lived
-specialists, you walk away, you come back to merged commits and green
-tests. Full toolkit is at
+specialists, you walk away, you come back to feature-branch commits with
+passing tests (merging to main stays your call, via PR review). Full
+toolkit is at
 [`worker_v1-missions`](https://github.com/clawborrator/worker_v1-missions),
 walkthrough at
 [`worker_v1-missions-example-1`](https://github.com/clawborrator/worker_v1-missions-example-1).
