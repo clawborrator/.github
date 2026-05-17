@@ -105,8 +105,16 @@ the hub at a different URL.
         └─► your live CC session is in the sidebar
             click it → live chat + tool timeline
 
-  now share the session URL with a teammate. they sign in, open the
-  same session, and you both drive the SAME Claude Code:
+  to let a teammate drive the same session, share it explicitly:
+
+    1. open the session in orchard
+    2. Actions menu → "Share with a github user"
+    3. enter their github login (e.g. @alice)
+    4. pick a role: viewer (read-only) / prompter / approver
+    5. they sign in to next.clawborrator.com with the same github
+       account, the session now appears in THEIR sidebar too.
+
+  once shared, you both drive the SAME Claude Code:
 
                                   hub
                                    │
@@ -125,8 +133,11 @@ the hub at a different URL.
 ```
 
 This is the original pitch: one Claude session, many humans driving it.
-Permission requests race; whoever approves first wins. Useful for pair
-debugging, code review walkthroughs, async handoffs across timezones.
+Permission requests race; whoever approves first wins. The role you assign
+gates what each sharee can do: viewers see the timeline but cannot prompt,
+prompters can drive the agent, approvers can also resolve permission
+gates. Useful for pair debugging, code review walkthroughs, async
+handoffs across timezones.
 
 ---
 
