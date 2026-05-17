@@ -37,7 +37,7 @@ Six scenes. Each one shows what's happening and what to take away. Open
        │                                │◄───────────────────────────────┤
        │   signed in                    │
        │                                │
-       │   $ claw token mint --name laptop
+       │   $ npx clawborrator-cli token mint --name laptop
        │   → ck_live_abc123...
        │
        └── keep this token; every Claude Code session will use it to connect.
@@ -229,8 +229,9 @@ walkthrough at
 - [`worker_v1-missions`](https://github.com/clawborrator/worker_v1-missions)
   full orchestrator + worker + validator toolkit for the multi-agent
   pattern from Scene 6.
-- [`cli_v1`](https://www.npmjs.com/package/clawborrator-cli) on npm. The
-  `claw` command: mint tokens, list peers, attach sessions, publish agents.
+- [`cli_v1`](https://www.npmjs.com/package/clawborrator-cli) on npm.
+  Run with `npx clawborrator-cli <subcommand>`: mint tokens, list peers,
+  attach sessions, publish agents. No install needed.
 - [`channel_v1`](https://www.npmjs.com/package/clawborrator-mcp) on npm.
   The MCP server that bridges Claude Code to the hub (Scene 2).
 - [`desktop_v1`](https://github.com/clawborrator/desktop_v1) Rust
