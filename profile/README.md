@@ -58,17 +58,20 @@ containers).
     { "mcpServers": { "clawborrator": {
         "command": "npx",
         "args": ["-y", "clawborrator-mcp"],
-        "env": { "CLAWBORRATOR_TOKEN": "ck_live_..." } } } }
+        "env": {
+          "CLAWBORRATOR_TOKEN":   "ck_live_...",
+          "CLAWBORRATOR_HUB_URL": "wss://next.clawborrator.com"
+        } } } }
 
   then in that directory:
 
-    $ claude
+    $ claude --dangerously-load-development-channels server:clawborrator
 
     [claude] starts the session
        │
        │ spawns clawborrator-mcp (npm: clawborrator-mcp)
        ▼
-    [clawborrator-mcp] dials wss://next.clawborrator.com/channel
+    [clawborrator-mcp] dials  $CLAWBORRATOR_HUB_URL/channel
        │
        │ register frame (token + cwd + routing-name)
        ▼
@@ -80,6 +83,14 @@ containers).
 Anything Claude Code does (read a file, edit, run a tool) flows through this
 MCP. The hub never sees your code; it only sees the tool events and chat
 messages the MCP forwards. You stay in control of the local filesystem.
+
+The `--dangerously-load-development-channels server:clawborrator` flag is what
+turns on inbound message delivery from the hub (routed prompts arrive in the
+session as `<channel>` user turns). Without it, `clawborrator-mcp` still
+registers the session and emits outbound events, but nothing can prompt the
+agent from the outside. `CLAWBORRATOR_HUB_URL` defaults to
+`wss://next.clawborrator.com` and can be omitted unless you're self-hosting
+the hub at a different URL.
 
 ---
 
