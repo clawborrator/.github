@@ -29,13 +29,14 @@ Six scenes. Each one shows what's happening and what to take away. Open
 ```
       you                       next.clawborrator.com                 GitHub
        │                                │                                │
-       │   open the landing page        │                                │
+       │   $ npx clawborrator-cli login                                  │
+       │   (opens a browser tab for OAuth)                               │
        ├───────────────────────────────►│                                │
        │                                │   OAuth redirect               │
        │                                ├───────────────────────────────►│
        │                                │           auth code            │
        │                                │◄───────────────────────────────┤
-       │   signed in                    │
+       │   CLI is now logged in         │
        │                                │
        │   $ npx clawborrator-cli token mint --name laptop
        │   → ck_live_abc123...
@@ -43,10 +44,12 @@ Six scenes. Each one shows what's happening and what to take away. Open
        └── keep this token; every Claude Code session will use it to connect.
 ```
 
-The token (`ck_live_...`) is your identity on the hub. One token per machine
-or per agent. You can mint as many as you want and revoke any of them from
-the admin UI. The token never leaves your `.mcp.json` (or `.env` for
-containers).
+`npx clawborrator-cli login` authenticates the CLI to the hub via GitHub
+OAuth (browser opens, you approve, the CLI gets a session). After that,
+`token mint` works without re-prompting. The resulting `ck_live_...` is
+your identity on the hub. One token per machine or per agent. You can mint
+as many as you want and revoke any of them from the admin UI. The token
+never leaves your `.mcp.json` (or `.env` for containers).
 
 ---
 
