@@ -144,10 +144,12 @@ handoffs across timezones.
 ## 4. Route a question to another peer session
 
 ```
-  in any CC session, prompt the model:
+  in any CC session, ask in natural language:
 
-    "route_to_peer @my-other-laptop and ask whether
-     it has the design doc for the auth refactor"
+    "ask my-other-laptop whether it has the design doc
+     for the auth refactor"
+
+  the model picks the route_to_peer tool on its own:
 
          your CC                   hub                  @other-laptop CC
             │                       │                         │
