@@ -183,7 +183,7 @@ never need to know each other's IPs or auth tokens.
         -e CLAWBORRATOR_EPHEMERAL=1                        \
         -e CLAWBORRATOR_ROUTING_NAME=stats-probe           \
         -e CLAUDE_INITIAL_PROMPT="read /host/proc/meminfo  \
-          + report a JSON summary to @you via route_to_peer" \
+          and report a JSON summary to @you"               \
         -v /proc:/host/proc:ro                             \
         ladder99/clawborrator-worker:latest
 
@@ -203,8 +203,12 @@ wires up two pieces: hub deletes the session row on disconnect, and the
 bundled hook signals PID 1 after the assistant's first Stop event so the
 container exits without you babysitting it.
 
-See [`worker_v1-managed-probe`](https://github.com/clawborrator/worker_v1-managed-probe)
-for the same pattern as a one-command repo.
+`~/.clawborrator-spawn.env` is a host-side file you set up once with the
+three shared secrets (`CLAWBORRATOR_TOKEN`, `CLAUDE_CODE_OAUTH_TOKEN`,
+`CLAWBORRATOR_HUB_URL`); every ephemeral spawn `--env-file`s it. See the
+[`worker_v1-managed-probe`](https://github.com/clawborrator/worker_v1-managed-probe)
+README for the first-time setup recipe and a one-command version of the
+spawn pattern above.
 
 ---
 
