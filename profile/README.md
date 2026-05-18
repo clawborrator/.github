@@ -212,45 +212,147 @@ spawn pattern above.
 
 ---
 
-## 6. Hand off to a mission orchestrator (multi-agent)
+## 6. Set up a target repo for your first mission
+
+Workers commit to a real GitHub repo. For your first mission, use a
+throwaway so you can iterate without worrying about pushing nonsense
+to anything you care about.
 
 ```
-  for work too big for one session, hand it to a missions orchestrator:
+  1. open https://github.com/new
+       name:    missions-smoketest  (or whatever you want)
+       init:    yes, with a README
+       create.
 
-    in any CC session, ask in natural language:
+  2. open https://github.com/settings/tokens?type=beta
+       new fine-grained PAT
+       repository access: only missions-smoketest
+       permissions:       Contents = Read and write
+                          Metadata = Read-only
+       generate, copy.  → ghp_xxx...  (the orchestrator's REPO_PAT)
 
-      "ask @<owner>/missions-orchestrator to build /health + /add
-       endpoints in github.com/me/app, three features, TS + vitest,
-       branch per feature"
+  3. (optional) seed the repo's README with one paragraph:
 
-    the model picks the dispatch_to_agent tool on its own
-    (cross-tenant; @<owner>/<slug> handle resolves on the hub).
+         # missions-smoketest
+         Throwaway target for clawborrator missions toolkit.
+         Workers may freely modify any file. Branch per feature.
+```
 
-         orchestrator session
-              │
-              ├─► writes  .mission/features.json          (3 features)
-              ├─► writes  .mission/validation-contract.json (35 assertions)
-              │
-              │  for each feature, in strict serial:
-              │
-              ├─► spawn worker (ephemeral)       ──► implement, commit, push, handoff
-              ├─► spawn scrutiny validator       ──► tests + lint + code review, handoff
-              ├─► spawn user-test validator      ──► Playwright drives the live app, handoff
-              ├─► all green? mark feature done, advance to the next.
-              │  failed? respawn worker with the failing assertions as context.
-              │
-              └─► final report routes back to you when all assertions pass.
+Five minutes of setup. The PAT is what lets workers spawned by the
+orchestrator push their per-feature commits. Use a fine-grained PAT
+scoped to this one repo so the blast radius is bounded.
+
+---
+
+## 7. Provision the orchestrator session
+
+On the host that will RUN the orchestrator (your laptop is fine; same
+machine that already runs your other CC sessions from Scene 2):
+
+```
+  $ git clone https://github.com/clawborrator/worker_v1-missions \
+      ~/missions-orchestrator-smoketest
+  $ cd ~/missions-orchestrator-smoketest
+
+  write .env in this directory (4 lines, mode 600):
+
+    REPO_URL=https://github.com/<your-user>/missions-smoketest
+    REPO_PAT=ghp_xxx...
+    GIT_USER_EMAIL=you@example.com
+    GIT_USER_NAME=Your Name
+
+    $ chmod 600 .env
+
+  write .mcp.json in this directory (same shape as Scene 2, but with
+  a routing name so it shows up as @missions-orchestrator-smoketest
+  in your peer list):
+
+    { "mcpServers": { "clawborrator": {
+        "command": "npx",
+        "args": ["-y", "clawborrator-mcp"],
+        "env": {
+          "CLAWBORRATOR_TOKEN":        "ck_live_...",
+          "CLAWBORRATOR_HUB_URL":      "wss://next.clawborrator.com",
+          "CLAWBORRATOR_ROUTING_NAME": "missions-orchestrator-smoketest"
+        } } } }
+
+  start the session:
+
+    $ claude --dangerously-load-development-channels server:clawborrator
+
+    [hub] new session @missions-orchestrator-smoketest registers
+    [orchestrator] reads CLAUDE.md from worker_v1-missions as its playbook
+```
+
+The orchestrator is just a normal CC session with `worker_v1-missions`
+cloned in its cwd. The repo's `CLAUDE.md` is the orchestrator playbook
+(plan, write a validation contract, spawn workers + validators serially,
+parse handoffs, decide what to spawn next). The `.env` carries the target
+repo coordinates the workers will use when they push.
+
+`~/.clawborrator-spawn.env` from Scene 5 is also required (the orchestrator
+uses it to spawn ephemeral worker containers); if you skipped Scene 5 the
+[`worker_v1-managed-probe` README](https://github.com/clawborrator/worker_v1-managed-probe)
+has the first-time recipe.
+
+---
+
+## 8. Send the mission ask and watch it run
+
+In orchard-chat, open the `@missions-orchestrator-smoketest` session and
+send the mission ask:
+
+```
+  "build a tiny TypeScript Express app with two endpoints:
+     /health returns 200 with {ok:true, ts:<iso>}
+     /add?a=N&b=M returns 200 with {sum:N+M}
+   three features (scaffold, /health, /add).
+   branch per feature. TS + vitest.
+   notify @<your-routing-name> when all features pass."
+```
+
+The orchestrator runs the loop:
+
+```
+       orchestrator
+            │
+            ├─► writes  .mission/features.json          (3 features)
+            ├─► writes  .mission/validation-contract.json (~35 assertions)
+            │
+            │  for each feature, in strict serial:
+            │
+            ├─► spawn worker (ephemeral)       ──► implement, commit, push, handoff
+            ├─► spawn scrutiny validator       ──► tests + lint + code review, handoff
+            ├─► spawn user-test validator      ──► Playwright drives the live app, handoff
+            ├─► all green? mark feature done, advance to the next.
+            │  failed? respawn worker with the failing assertions as context.
+            │
+            └─► final report routes back to you when all assertions pass.
 
   every handoff arrives in your orchard-chat as a structured Handoff card
   (status pill, completed list, issues list, commands run, exit codes).
+```
+
+Four vantage points to watch from:
+
+```
+  chat:      orchard-chat shows the orchestrator's narration + every
+             handoff as a Handoff card.
+  host:      $ watch -n2 'docker ps --filter name=mission-'
+             (ephemeral workers come and go as the loop runs).
+  target:    refresh missions-smoketest's branches view; new
+             feat/<id> branches appear as workers push.
+  peers:     $ npx clawborrator-cli peers ls
+             each spawned worker briefly appears as a peer.
 ```
 
 This is the missions pattern: one orchestrator coordinates many short-lived
 specialists, you walk away, you come back to feature-branch commits with
 passing tests (merging to main stays your call, via PR review). Full
 toolkit is at
-[`worker_v1-missions`](https://github.com/clawborrator/worker_v1-missions),
-walkthrough at
+[`worker_v1-missions`](https://github.com/clawborrator/worker_v1-missions);
+the full newcomer walkthrough (longer than this scene, covers more edge
+cases) is at
 [`worker_v1-missions-example-1`](https://github.com/clawborrator/worker_v1-missions-example-1).
 
 ---
