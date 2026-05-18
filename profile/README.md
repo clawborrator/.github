@@ -17,6 +17,12 @@
 
 ---
 
+<p align="center">
+  <img src="./architecture.png" alt="clawborrator architecture diagram: external services at top, the hub in the middle with API / WS / WEB UI surfaces, operator interfaces and agent runners as clients at the bottom" width="820" />
+</p>
+
+---
+
 # Operator walkthrough
 
 Eight scenes. The first five get you running with one Claude Code
