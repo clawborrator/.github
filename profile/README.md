@@ -19,7 +19,10 @@
 
 # Operator walkthrough
 
-Six scenes. Each one shows what's happening and what to take away. Open
+Eight scenes. The first five get you running with one Claude Code
+session driven from the browser. The last three walk you through
+spinning up a missions orchestrator that coordinates many agents.
+Each one shows what's happening and what to take away. Open
 [`next.clawborrator.com`](https://next.clawborrator.com) in another tab and follow along.
 
 ---
