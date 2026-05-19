@@ -27,6 +27,10 @@ Ten-part explainer series. About fourteen minutes total.
 9. [Publish for public live-view](https://youtu.be/YSMymRjttOg)
 10. [Audit, budgets, and governance](https://youtu.be/_Otxn1cgz1o)
 
+**Bonus**
+
+- [B01 · Workers, deeper](https://youtu.be/Vv62aFp_9Pc)
+
 ---
 
 # Operator walkthrough
