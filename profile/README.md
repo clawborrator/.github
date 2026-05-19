@@ -12,6 +12,23 @@
 
 ---
 
+## Videos
+
+Ten-part explainer series. About fourteen minutes total.
+
+1. [What's in clawborrator](https://youtu.be/kT8T9SCucso)
+2. [Self-host the hub](https://youtu.be/Z3-MNJg-jmU)
+3. [Connect a Claude Code session](https://youtu.be/P_ruclcPEyw)
+4. [Bring a teammate in](https://youtu.be/_ZEiP5Da70Q)
+5. [Sessions that talk to each other](https://youtu.be/1ApNEUyj3JM)
+6. [Publish a session as a reusable agent](https://youtu.be/xXdqI3rh75w)
+7. [Headless workers in Docker](https://youtu.be/eHoSivZ8eAE)
+8. [Drive your laptop from another machine](https://youtu.be/1u5wSI-Lr0Y)
+9. [Publish for public live-view](https://youtu.be/YSMymRjttOg)
+10. [Audit, budgets, and governance](https://youtu.be/_Otxn1cgz1o)
+
+---
+
 # Operator walkthrough
 
 Eight scenes. The first five get you running with one Claude Code
